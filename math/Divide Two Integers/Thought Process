@@ -1,0 +1,20 @@
+25 / 5 = 5
+dividend / divisor = quotient
+
+1) Integer.MIN_VALUE ends at 8 while Integer.MAX_VALUE ends at 7
+- Integer.MIN_VALUE -2,147,483,648
+- Integer.MAX_VALUE 2,147,483,647
+
+First case scenario to think of : If we divide min by -1, it becomes 2,417,483,648 == overflow, so we have if statement to handle this.
+
+2) Whether divisor has negative or not is important. We can just check if we need to put negative on end result
+- check if whichever side is negative
+
+3) Now we look at the dividend and divisor. To avoid any overflow issue, we should swap it all to negative
+- if dividend is positive, make it negative
+- if divisor is positive, make it negative
+
+4) We do repeated subtraction. Technically it would cause timeout since we loop and keep subtracting, and each minus we do result++
+- result is quotient btw
+
+5)
