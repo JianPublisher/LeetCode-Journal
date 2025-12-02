@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="83a34163-8f42-4bb6-9056-5bc6021abdc3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Chapter 2 - Arrays and LinkedList/SelectionSort.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Chapter 2 - Arrays and LinkedList/SelectionSort.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Chapter 3 - Recursion/Recursion.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Chapter 3 - Recursion/img.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Chapter 2 - Arrays and LinkedList/Array vs LinkedList.md" beforeDir="false" afterPath="$PROJECT_DIR$/Chapter 2 - Arrays and LinkedList/Array vs LinkedList.md" afterDir="false" />
-    </list>
+    <list default="true" id="83a34163-8f42-4bb6-9056-5bc6021abdc3" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -69,7 +62,7 @@
       <workItem from="1758306760405" duration="4569000" />
       <workItem from="1758456424696" duration="1362000" />
       <workItem from="1758548117106" duration="597000" />
-      <workItem from="1764686545479" duration="14136000" />
+      <workItem from="1764686545479" duration="14232000" />
     </task>
     <servers />
   </component>
