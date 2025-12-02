@@ -6,7 +6,7 @@ class Solution {
 		}
 
 		// Determine the sign of the result
-		boolean isNegative = (dividend < 0 && divisor > 0 ) || (dividend > 0 || divisor < 0);
+		boolean isNegative = (dividend < 0 && divisor > 0 ) || (dividend > 0 && divisor < 0);
 
 		// Convert both numbers to negative to avoid overflow
 		int absDividend = dividend > 0 ? -dividend : dividend;

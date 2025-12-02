@@ -17,4 +17,5 @@ First case scenario to think of : If we divide min by -1, it becomes 2,417,483,6
 4) We do repeated subtraction. Technically it would cause timeout since we loop and keep subtracting, and each minus we do result++
 - result is quotient btw
 
-5)
+5) The reason why we check if dividend < divisor, is because we changed it to negative.
+- while (absDividend <= absDivisor) ->
