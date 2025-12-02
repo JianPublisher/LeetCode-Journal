@@ -25,3 +25,4 @@ QUestion
    List, just need to change what previous node points to
 
 ![img.png](img.png)
+!!! Note: LinkedList insertion is O(1) only if you already have the pointer to the place of insertion, else it will still be O(N) !!! 
