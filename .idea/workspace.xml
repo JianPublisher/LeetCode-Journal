@@ -5,24 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="83a34163-8f42-4bb6-9056-5bc6021abdc3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Chapter 1 - Binary Search, Big O/BigONotes.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Chapter 1 - Binary Search, Big O/BinarySearch.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Chapter 1 - Binary Search, Big O/BinarySearchNotes.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Sorting/CountingSort.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Sorting/MaxHeapSort.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Sorting/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/LeetCode-Journal.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/checkstyle-idea.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/math/Divide Two Integers/DivideTwoIntegers.java" beforeDir="false" afterPath="$PROJECT_DIR$/math/Divide Two Integers/DivideTwoIntegers.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/math/Divide Two Integers/Thought Process" beforeDir="false" afterPath="$PROJECT_DIR$/math/Divide Two Integers/Thought Process" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Chapter 1 - Binary Search, Big O/img.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Chapter 1 - Binary Search, Big O/img_1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Chapter 2 - Arrays and LinkedList/Array vs LinkedList" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 1 - Binary Search, Big O/BigONotes.md" beforeDir="false" afterPath="$PROJECT_DIR$/Chapter 1 - Binary Search, Big O/BigONotes.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,7 +68,7 @@
       <workItem from="1758306760405" duration="4569000" />
       <workItem from="1758456424696" duration="1362000" />
       <workItem from="1758548117106" duration="597000" />
-      <workItem from="1764686545479" duration="3847000" />
+      <workItem from="1764686545479" duration="8953000" />
     </task>
     <servers />
   </component>
