@@ -1,28 +1,69 @@
-When it comes to memory
-1 byte = 1 address
+# Memory, Arrays, and Linked Lists
 
-- For Array, we need one continuous block of memory E.g array size 5 --> it will do for example [1001][1002][1003][1004][1005] memory allocation to that arrya
-- For LinkedList, nodes scattered across memory, so it could be stored anywhere, access is O(n)
-  Say 1st node is [1001] second node is [1080], third node is [1040], fourth node is [1050], to access 5th node from 1st node, I need to jump from 1st to 2nd to 3rd to 4th to 5th
-For this case, accessing Array is O(1) because with array we know the addresses of each element, and O(N) for LinkedList
+## Memory Basics
+- **1 byte = 1 address**
+- Arrays require **one continuous block of memory**.  
+  Example (size 5):  
+  `[1001][1002][1003][1004][1005]`
+- Linked list nodes are **scattered across memory**.  
+  Example node locations:  
+  `1001 → 1080 → 1040 → 1050 → ...`
 
-!!! LinkedList is basically slower overall when compared with Array !!!
-- So why do we use LinkedList? -> Insertion and deletion is fast, its O(1)
-- Array insertion and deletion is O(n) because we need to shift elements
-  If we delete an element in the middle, we have to shift else we break array logic
-  [1001, 1002, null, 1004, 1005] this breaks logic, we need to shift
-  [1001, 1002, 1004, 1005, null] - correct
+Because of this:
+- **Array access = O(1)** (direct index → direct address)
+- **LinkedList access = O(n)** (must follow pointers one-by-one)
+
+---
+
+## Linked List vs Array (Speed Breakdown)
+
+### Arrays
+- Fast access: **O(1)**
+- Slow insert/delete: **O(n)**  
+  (because everything must shift to maintain continuous memory)
+
+Example of deletion:
+[1001, 1002, null, 1004, 1005] ← breaks array logic
+[1001, 1002, 1004, 1005, null] ← after shifting (correct)
 
 
-QUestion
-1) Why does it take O(n) time to insert an element into an array? ( Assuming theres extra space at the end )
-   You need to shift all elements to the right to have first index empty before inserting
+### Linked Lists
+- Slow access: **O(n)**
+- Fast insert/delete: **O(1)**  
+  (just change pointers)
 
-2) Inserting elements in the middle?
-   List, all u need is ot change where the node points to, but for array u need to shift, and if theres no space u need to copy everything to a new location
+---
 
-3) Deleting an element
-   List, just need to change what previous node points to
+## Why Use Linked Lists?
+Even though linked lists are slower overall:
+- **Insertion is O(1)** (if you already have the pointer)
+- **Deletion is O(1)** (adjust pointer of previous node)
 
+> ⚠️ Linked list insertion is only O(1) *if you already know where to insert*.  
+> Otherwise, finding the spot is **O(n)**.
+
+---
+
+# Questions & Answers
+
+### 1) Why does inserting into an array take O(n)?
+Even if you have extra space at the end:
+- You must **shift elements to the right** so the new element can fit where you want.
+- Shifting = O(n).
+
+---
+
+### 2) Inserting in the middle?
+- **LinkedList:** just change what the node points to → **O(1)**
+- **Array:** must shift elements, and if no space remains, you must **copy the whole array** to a new memory block → **O(n)** or worse.
+
+---
+
+### 3) Deleting an element?
+- **LinkedList:** change the previous node’s pointer → **O(1)**
+- **Array:** shift remaining elements left → **O(n)**
+
+---
+
+## Visual
 ![img.png](img.png)
-!!! Note: LinkedList insertion is O(1) only if you already have the pointer to the place of insertion, else it will still be O(N) !!! 

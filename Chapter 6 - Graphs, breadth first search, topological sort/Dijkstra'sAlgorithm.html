@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Dijkstra — Beginner Teaching UI</title>
+		<style>
+			:root{
+				--ink:#0f172a; --sub:#475569; --bg:#f6f7fb; --card:#fff; --br:#e5e7eb;
+				--node:#e0f2fe; --current:#bbf7d0; --neighbor:#fef9c3; --visited:#e5e7eb;
+				--distbg:#f9fafb; --pqbg:#f1f5f9; --accent:#0ea5e9;
+			}
+			*{box-sizing:border-box}
+			body{
+				font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;
+				background:var(--bg);
+				color:var(--ink);
+				margin:0;
+				padding:22px;
+				line-height:1.55;
+			}
+			.h1{font-size:24px;font-weight:800;margin:0 0 8px}
+			.sub{color:var(--sub);margin:2px 0 14px;font-size:14px}
+			.card{
+				background:var(--card);
+				border:1px solid var(--br);
+				border-radius:12px;
+				padding:14px;
+				margin-bottom:12px;
+			}
+			.controls{
+				display:flex;
+				flex-wrap:wrap;
+				gap:8px;
+				align-items:center;
+			}
+			input,button,select{
+				padding:8px 10px;
+				border:1px solid #aaa;
+				border-radius:10px;
+				font-size:14px;
+				background:#fff;
+			}
+			button{cursor:pointer}
+			button:disabled{opacity:.4;cursor:not-allowed}
+
+			.sectionTitle{
+				font-size:13px;
+				font-weight:600;
+				color:#334155;
+				margin-bottom:6px;
+			}
+
+			/* Graph SVG */
+			#graphSvg{
+				width:100%;
+				max-width:440px;
+				height:320px;
+				border-radius:12px;
+				background:#ffffff;
+				border:1px solid #e5e7eb;
+			}
+			.edge-label{
+				font-size:10px;
+				fill:#0f172a;
+				font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;
+			}
+			.edge-line{
+				stroke:#cbd5f5;
+				stroke-width:1.5;
+				marker-end:url(#arrow);
+			}
+			.edge-line.active{
+				stroke:#f97316;
+				stroke-width:2.4;
+			}
+			.edge-line.dim{
+				opacity:.3;
+			}
+
+			.nodes{
+				display:flex;
+				flex-wrap:wrap;
+				gap:10px;
+				margin-top:10px;
+			}
+			.node{
+				width:52px;
+				height:52px;
+				border-radius:999px;
+				border:2px solid #0f172a;
+				display:flex;
+				align-items:center;
+				justify-content:center;
+				font-weight:800;
+				position:relative;
+				background:var(--node);
+			}
+			.node.current{background:var(--current);}
+			.node.neighbor{background:var(--neighbor);}
+			.node.visited{background:var(--visited);border-style:dashed;}
+			.node .idx{
+				position:absolute;
+				bottom:-14px;
+				left:50%;
+				transform:translateX(-50%);
+				font-size:10px;
+				color:#64748b;
+			}
+			.node .dist{
+				position:absolute;
+				top:-18px;
+				left:50%;
+				transform:translateX(-50%);
+				font-size:10px;
+				background:var(--distbg);
+				border-radius:999px;
+				padding:1px 6px;
+				border:1px solid #cbd5f5;
+			}
+
+			#adjView, #edgesView{
+				font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+				background:#020617;
+				color:#e2e8f0;
+				font-size:12px;
+				border-radius:8px;
+				padding:8px;
+				white-space:pre;
+				overflow:auto;
+			}
+			#edgesView{margin-top:6px;}
+
+			.distRow{
+				display:flex;
+				flex-wrap:wrap;
+				gap:6px;
+				margin-top:4px;
+			}
+			.distCell{
+				padding:4px 8px;
+				border-radius:8px;
+				border:1px solid #e5e7eb;
+				background:var(--distbg);
+				font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+				font-size:12px;
+			}
+			.distCell.updated{
+				border-color:#f97316;
+				box-shadow:0 0 0 1px rgba(249,115,22,.35);
+			}
+
+			.pqRow{
+				display:flex;
+				flex-wrap:wrap;
+				gap:6px;
+				margin-top:4px;
+				font-size:12px;
+			}
+			.pqItem{
+				background:var(--pqbg);
+				border-radius:999px;
+				padding:4px 8px;
+				border:1px solid #cbd5f5;
+				font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+			}
+			.pqItem.current{
+				border-color:var(--accent);
+				box-shadow:0 0 0 1px rgba(14,165,233,.45);
+			}
+
+			.metaRow{
+				display:flex;
+				flex-wrap:wrap;
+				gap:12px;
+				font-size:12px;
+				color:#334155;
+				margin-top:8px;
+			}
+			.metaRow span b{font-weight:700}
+
+			.hdr{
+				display:flex;
+				justify-content:space-between;
+				align-items:center;
+				margin-bottom:8px;
+			}
+			.badge{
+				font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+				background:#ecfeff;
+				border:1px solid #a5f3fc;
+				color:#155e75;
+				padding:2px 8px;
+				border-radius:999px;
+				font-size:12px;
+			}
+			#panel{
+				white-space:pre-wrap;
+				border:1px solid var(--br);
+				background:#fff;
+				border-radius:10px;
+				padding:12px;
+				line-height:1.6;
+				font-size:13px;
+			}
+			#breadcrumb{
+				color:#64748b;
+				font-size:12px;
+			}
+
+			#codePanel{
+				font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+				font-size:12px;
+				background:#020617;
+				color:#e5e7eb;
+				border-radius:8px;
+				padding:8px;
+				white-space:pre;
+				overflow:auto;
+			}
+			.code-line{
+				padding:1px 4px;
+				border-radius:4px;
+			}
+			.code-line.active{
+				background:rgba(56,189,248,.25);
+			}
+			.code-line.dim{
+				opacity:.7;
+			}
+		</style>
+	</head>
+	<body>
+
+		<div class="h1">Dijkstra (Beginner Visualizer)</div>
+		<p class="sub">
+			Shows: raw edges → adjacency list → graph → dist[] + priority queue → step-by-step Dijkstra.
+		</p>
+
+		<div class="card">
+			<div class="controls">
+				<input id="edgesInput" size="50"
+						value="0 1 4, 0 2 1, 2 1 2, 1 3 1, 1 4 3, 2 5 7, 3 5 2, 4 5 5" />
+				<input id="nInput" type="number" value="6" min="2" max="20" style="width:70px" />
+				<input id="startInput" type="number" value="0" min="0" max="19" style="width:70px" />
+				<button id="gen">Generate</button>
+				<button id="prev" disabled>Previous</button>
+				<button id="next" disabled>Next</button>
+				<button id="reset">Reset</button>
+				<span id="stepInfo" style="margin-left:8px;color:#475569;font-size:12px"></span>
+			</div>
+		</div>
+
+		<div class="card">
+			<div class="sectionTitle">Graph view (nodes + weighted directed edges)</div>
+			<svg id="graphSvg">
+				<defs>
+					<marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3"
+							orient="auto" markerUnits="strokeWidth">
+						<path d="M0,0 L0,6 L6,3 z" fill="#cbd5f5"></path>
+					</marker>
+					<marker id="arrowActive" markerWidth="8" markerHeight="8" refX="6" refY="3"
+							orient="auto" markerUnits="strokeWidth">
+						<path d="M0,0 L0,6 L6,3 z" fill="#f97316"></path>
+					</marker>
+				</defs>
+			</svg>
+
+			<div class="nodes" id="nodes"></div>
+
+			<div style="margin-top:10px">
+				<div class="sectionTitle">Adjacency list (built from edges)</div>
+				<div id="adjView">Adjacency list will appear here after “Generate”.</div>
+				<div id="edgesView">Raw edges will appear here after “Generate”.</div>
+			</div>
+
+			<div style="margin-top:12px">
+				<div class="sectionTitle">dist[i] — best cost from start → i</div>
+				<div id="distRow" class="distRow"></div>
+			</div>
+
+			<div style="margin-top:12px">
+				<div class="sectionTitle">Priority queue (min-heap) — {cost, node}</div>
+				<div id="pqRow" class="pqRow"></div>
+			</div>
+
+			<div class="metaRow">
+				<span><b>phase:</b> <span id="metaPhase">–</span></span>
+				<span><b>current node:</b> <span id="metaNode">–</span></span>
+				<span><b>current cost:</b> <span id="metaCost">–</span></span>
+				<span><b>neighbor:</b> <span id="metaNeighbor">–</span></span>
+				<span><b>newCost:</b> <span id="metaNewCost">–</span></span>
+			</div>
+		</div>
+
+		<div class="card">
+			<div class="sectionTitle">Code (highlighted line = what this step is doing)</div>
+			<div id="codePanel"></div>
+		</div>
+
+		<div class="card">
+			<div class="hdr">
+				<div class="badge" id="stepType">—</div>
+				<div id="breadcrumb">—</div>
+			</div>
+			<div id="panel">Click “Generate” to start from edges → adjacency list → Dijkstra.</div>
+		</div>
+
+		<script>
+			let steps = [];
+			let idx = -1;
+			let N = 6;
+			let START = 0;
+			let graph = [];
+
+			const elNodes = document.getElementById('nodes');
+			const elAdjView = document.getElementById('adjView');
+			const elEdgesView = document.getElementById('edgesView');
+			const elDistRow = document.getElementById('distRow');
+			const elPqRow = document.getElementById('pqRow');
+			const elStepInfo = document.getElementById('stepInfo');
+			const elType = document.getElementById('stepType');
+			const elPanel = document.getElementById('panel');
+			const elTrail = document.getElementById('breadcrumb');
+			const elMetaPhase = document.getElementById('metaPhase');
+			const elMetaNode = document.getElementById('metaNode');
+			const elMetaCost = document.getElementById('metaCost');
+			const elMetaNeighbor = document.getElementById('metaNeighbor');
+			const elMetaNewCost = document.getElementById('metaNewCost');
+			const elPrev = document.getElementById('prev');
+			const elNext = document.getElementById('next');
+			const elCode = document.getElementById('codePanel');
+			const elSvg = document.getElementById('graphSvg');
+
+			const codeLines = [
+				"// build adjacency list from (from, to, weight)",
+				"for each edge (u, v, w):",
+				"    graph[u].push({to: v, w: w})",
+				"",
+				"// Dijkstra",
+				"dist[i] = ∞ for all i",
+				"dist[start] = 0",
+				"pq = empty min-heap",
+				"push (0, start) into pq",
+				"",
+				"while pq not empty:",
+				"    (currentCost, node) = pq.popMin()",
+				"    if currentCost > dist[node]:",
+				"        continue  // outdated entry",
+				"    mark node as visited",
+				"    for each edge (node → neighbor, w) in graph[node]:",
+				"        newCost = currentCost + w",
+				"        if newCost < dist[neighbor]:",
+				"            dist[neighbor] = newCost",
+				"            push (newCost, neighbor) into pq",
+				"",
+				"// when pq is empty, dist[] holds final shortest path costs"
+			];
+
+			function renderCode(activeIndex){
+				elCode.innerHTML = "";
+				codeLines.forEach((line,i)=>{
+					const div = document.createElement('div');
+					div.className = 'code-line';
+					if(line.trim().length===0) div.classList.add('dim');
+					if(i===activeIndex) div.classList.add('active');
+					div.textContent = line;
+					elCode.appendChild(div);
+				});
+			}
+
+			function cloneArr(a){ return a ? a.slice() : null; }
+			function clonePq(pq){ return pq.map(p => ({cost:p.cost,node:p.node})); }
+			function cloneVisited(set){
+				const s = new Set();
+				for(const x of set) s.add(x);
+				return s;
+			}
+
+			function pushStep(opts){
+				steps.push({
+					phase: opts.phase || "–",
+					type: opts.type || "–",
+					text: opts.text || "",
+					dist: cloneArr(opts.dist),
+					pq: opts.pq ? clonePq(opts.pq) : [],
+					visited: opts.visited ? cloneVisited(opts.visited) : new Set(),
+					currentNode: opts.currentNode===undefined?null:opts.currentNode,
+					currentCost: opts.currentCost===undefined?null:opts.currentCost,
+					neighbor: opts.neighbor===undefined?null:opts.neighbor,
+					newCost: opts.newCost===undefined?null:opts.newCost,
+					adjText: opts.adjText || "",
+					edgesText: opts.edgesText || "",
+					updatedIndex: opts.updatedIndex===undefined?null:opts.updatedIndex,
+					codeLine: opts.codeLine===undefined?null:opts.codeLine,
+					activeEdge: opts.activeEdge || null  // {u,v}
+				});
+			}
+
+			function renderNodes(dist, visited, currentNode, neighborNode){
+				elNodes.innerHTML="";
+				for(let i=0;i<N;i++){
+					const d=document.createElement('div');
+					d.className='node';
+					if(visited && visited.has(i)) d.classList.add('visited');
+					if(i===currentNode) d.classList.add('current');
+					if(i===neighborNode && neighborNode!==currentNode && neighborNode!==null){
+						d.classList.add('neighbor');
+					}
+					d.textContent=i;
+
+					const idx=document.createElement('div');
+					idx.className='idx';
+					idx.textContent="i="+i;
+					d.appendChild(idx);
+
+					const distTag=document.createElement('div');
+					distTag.className='dist';
+					let val=(dist && dist[i]!==undefined ? dist[i] : Infinity);
+					distTag.textContent=(val===Infinity?"∞":val);
+					d.appendChild(distTag);
+
+					elNodes.appendChild(d);
+				}
+			}
+
+			function renderAdj(adjText, edgesText){
+				elAdjView.textContent = adjText || "Adjacency list not built yet.";
+				elEdgesView.textContent = edgesText || "Raw edges not parsed yet.";
+			}
+
+			function renderDist(dist, updatedIndex){
+				elDistRow.innerHTML="";
+				if(!dist){
+					elDistRow.textContent="dist[] will appear once Dijkstra starts.";
+					return;
+				}
+				for(let i=0;i<N;i++){
+					const c=document.createElement('div');
+					c.className='distCell';
+					if(i===updatedIndex) c.classList.add('updated');
+					const v=dist[i];
+					c.textContent=`dist[${i}] = ${v===Infinity?"∞":v}`;
+					elDistRow.appendChild(c);
+				}
+			}
+
+			function renderPq(pq, currentNode){
+				elPqRow.innerHTML="";
+				if(!pq || !pq.length){
+					elPqRow.textContent="∅ (empty)";
+					return;
+				}
+				pq.forEach(item=>{
+					const d=document.createElement('div');
+					d.className='pqItem';
+					if(item.node===currentNode) d.classList.add('current');
+					d.textContent=`{cost:${item.cost}, node:${item.node}}`;
+					elPqRow.appendChild(d);
+				});
+			}
+
+			// Graph SVG rendering
+			function renderGraphSvg(dist, visited, currentNode, neighborNode, activeEdge){
+				const width = elSvg.clientWidth || 440;
+				const height = elSvg.clientHeight || 320;
+				while(elSvg.firstChild && elSvg.firstChild.tagName!=="DEFS") elSvg.removeChild(elSvg.lastChild);
+
+				const defs = elSvg.querySelector('defs');
+
+				elSvg.innerHTML="";
+				if(defs) elSvg.appendChild(defs);
+
+				const cx = width/2;
+				const cy = height/2;
+				const r = Math.min(width,height)/2 - 40;
+
+				const positions = [];
+				for(let i=0;i<N;i++){
+					const angle = (2*Math.PI*i)/N - Math.PI/2;
+					const x = cx + r * Math.cos(angle);
+					const y = cy + r * Math.sin(angle);
+					positions.push({x,y});
+				}
+
+				// edges
+				for(let u=0;u<N;u++){
+					for(const e of (graph[u]||[])){
+						const v = e.to;
+						const w = e.w;
+						const from = positions[u];
+						const to = positions[v];
+
+						const dx = to.x - from.x;
+						const dy = to.y - from.y;
+						const len = Math.sqrt(dx*dx+dy*dy) || 1;
+						const shrink = 24;
+						const sx = from.x + (dx/len)*shrink;
+						const sy = from.y + (dy/len)*shrink;
+						const tx = to.x - (dx/len)*shrink;
+						const ty = to.y - (dy/len)*shrink;
+
+						const line = document.createElementNS("http://www.w3.org/2000/svg","line");
+						line.setAttribute("x1",sx);
+						line.setAttribute("y1",sy);
+						line.setAttribute("x2",tx);
+						line.setAttribute("y2",ty);
+
+						let isActive = activeEdge && activeEdge.u===u && activeEdge.v===v;
+						line.setAttribute("class", "edge-line"+(isActive?" active":""));
+						line.setAttribute("marker-end", isActive?"url(#arrowActive)":"url(#arrow)");
+						elSvg.appendChild(line);
+
+						const label = document.createElementNS("http://www.w3.org/2000/svg","text");
+						label.setAttribute("class","edge-label");
+						const lx = (sx+tx)/2 + (dy/len)*8;
+						const ly = (sy+ty)/2 - (dx/len)*8;
+						label.setAttribute("x",lx);
+						label.setAttribute("y",ly);
+						label.textContent = w;
+						elSvg.appendChild(label);
+					}
+				}
+
+				// nodes
+				for(let i=0;i<N;i++){
+					const pos = positions[i];
+					const g = document.createElementNS("http://www.w3.org/2000/svg","g");
+
+					const circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
+					circle.setAttribute("cx",pos.x);
+					circle.setAttribute("cy",pos.y);
+					circle.setAttribute("r",20);
+
+					let fill = "#e0f2fe";
+					let stroke = "#0f172a";
+					let strokeDash = "";
+					if(visited && visited.has(i)){
+						fill = "#e5e7eb";
+						strokeDash = "4 3";
+					}
+					if(i===currentNode){
+						fill = "#bbf7d0";
+					}else if(i===neighborNode && neighborNode!==null){
+						fill = "#fef9c3";
+					}
+					circle.setAttribute("fill",fill);
+					circle.setAttribute("stroke",stroke);
+					circle.setAttribute("stroke-width","2");
+					if(strokeDash) circle.setAttribute("stroke-dasharray",strokeDash);
+					g.appendChild(circle);
+
+					const text = document.createElementNS("http://www.w3.org/2000/svg","text");
+					text.setAttribute("x",pos.x);
+					text.setAttribute("y",pos.y+4);
+					text.setAttribute("text-anchor","middle");
+					text.setAttribute("font-size","13");
+					text.setAttribute("font-weight","700");
+					text.textContent = i;
+					g.appendChild(text);
+
+					const distTag = document.createElementNS("http://www.w3.org/2000/svg","text");
+					distTag.setAttribute("x",pos.x);
+					distTag.setAttribute("y",pos.y-26);
+					distTag.setAttribute("text-anchor","middle");
+					distTag.setAttribute("font-size","10");
+					let val = dist && dist[i]!==undefined ? dist[i] : Infinity;
+					distTag.textContent = (val===Infinity ? "∞" : val);
+					elSvg.appendChild(g);
+					elSvg.appendChild(distTag);
+				}
+			}
+
+			function parseEdgesAndBuildSteps(){
+				const rawEdges=document.getElementById('edgesInput').value.trim();
+				const rawN=parseInt(document.getElementById('nInput').value,10);
+				const rawStart=parseInt(document.getElementById('startInput').value,10);
+
+				if(!Number.isNaN(rawN) && rawN>1) N=rawN;
+				if(!Number.isNaN(rawStart) && rawStart>=0 && rawStart<N) START=rawStart;
+
+				graph=[];
+				for(let i=0;i<N;i++) graph.push([]);
+
+				let edgesText="Raw edges (from, to, weight):\n";
+				let adjText="graph[i] = list of {neighbor, weight}\n\n";
+
+				const parsedEdges=[];
+				if(rawEdges.length){
+					const parts=rawEdges.split(',');
+					for(const p of parts){
+						const bits=p.trim().split(/\s+/);
+						if(bits.length===3){
+							const u=parseInt(bits[0],10);
+							const v=parseInt(bits[1],10);
+							const w=parseInt(bits[2],10);
+							if(!Number.isNaN(u)&&!Number.isNaN(v)&&!Number.isNaN(w)
+									&& u>=0 && u<N && v>=0 && v<N){
+								parsedEdges.push({u,v,w});
+							}
+						}
+					}
+				}
+				parsedEdges.forEach(e=>{
+					edgesText+=`  (${e.u} → ${e.v}, w=${e.w})\n`;
+				});
+
+				pushStep({
+					phase:"edges",
+					type:"parse-edges",
+					text:
+							`Phase 1 — Read raw edges.
+
+Each triple "u v w" means:
+  u → v with weight w.
+
+We'll use this to build an adjacency list next.`,
+					dist:null,pq:[],visited:new Set(),
+					adjText,edgesText,codeLine:0
+				});
+
+				for(const e of parsedEdges){
+					graph[e.u].push({to:e.v,w:e.w});
+
+					adjText="graph as adjacency list (after inserting this edge):\n";
+					for(let i=0;i<N;i++){
+						const row=graph[i];
+						if(!row.length){
+							adjText+=`  ${i}: []\n`;
+						}else{
+							const parts=row.map(x=>`(${x.to}, w=${x.w})`);
+							adjText+=`  ${i}: [ ${parts.join(", ")} ]\n`;
+						}
+					}
+
+					pushStep({
+						phase:"adjacency",
+						type:"add-edge",
+						text:
+								`Building adjacency list.
+
+We take this edge:
+  (${e.u} → ${e.v}, w=${e.w})
+
+and append it to graph[${e.u}].
+
+Dijkstra will later ask:
+  "from node ${e.u}, what neighbors and weights do I have?"`,
+						dist:null,pq:[],visited:new Set(),
+						adjText,edgesText,codeLine:1,
+						activeEdge:{u:e.u,v:e.v}
+					});
+				}
+
+				pushStep({
+					phase:"adjacency",
+					type:"adj-done",
+					text:
+							`Adjacency list complete.
+
+graph[i] now holds all outgoing edges from node i.
+
+Next: initialize dist[] and the priority queue
+and start Dijkstra from node ${START}.`,
+					dist:null,pq:[],visited:new Set(),
+					adjText,edgesText,codeLine:3
+				});
+
+				return {adjText,edgesText};
+			}
+
+			function dijkstraSteps(adjText,edgesText){
+				const dist=new Array(N).fill(Infinity);
+				const visited=new Set();
+				const pq=[];
+
+				function pqPush(cost,node){
+					pq.push({cost,node});
+					pq.sort((a,b)=>a.cost-b.cost);
+				}
+				function pqPop(){ return pq.shift(); }
+
+				pushStep({
+					phase:"dijkstra-init",
+					type:"init-dist",
+					text:
+							`Phase 2 — Initialize dist[].
+
+Set dist[i] = ∞ for all nodes i,
+because we don't know any path costs yet.`,
+					dist:cloneArr(dist),pq:clonePq(pq),visited,
+					adjText,edgesText,codeLine:5
+				});
+
+				dist[START]=0;
+				pushStep({
+					phase:"dijkstra-init",
+					type:"set-start",
+					text:
+							`Set dist[start] = 0.
+
+For start=${START}:
+
+  dist[${START}] = 0
+
+Meaning:
+"reaching the starting node from itself costs 0."`,
+					dist:cloneArr(dist),pq:clonePq(pq),visited,
+					adjText,edgesText,codeLine:6,currentNode:START
+				});
+
+				pushStep({
+					phase:"dijkstra-init",
+					type:"init-pq",
+					text:
+							`Initialize the priority queue (min-heap).
+
+We'll push the start node with cost 0 next.`,
+					dist:cloneArr(dist),pq:clonePq(pq),visited,
+					adjText,edgesText,codeLine:7
+				});
+
+				pqPush(0,START);
+				pushStep({
+					phase:"dijkstra-init",
+					type:"push-start",
+					text:
+							`Push the start node into the priority queue:
+
+  {cost:0, node:${START}}
+
+This says:
+"right now, the only known path is to node ${START} with cost 0."`,
+					dist:cloneArr(dist),pq:clonePq(pq),visited,
+					adjText,edgesText,codeLine:8,
+					currentNode:START,currentCost:0
+				});
+
+				while(pq.length){
+					pushStep({
+						phase:"dijkstra-loop",
+						type:"loop-check",
+						text:
+								`Check main loop:
+
+while pq not empty:
+  pop the smallest-cost entry
+  and decide how to handle that node.`,
+						dist:cloneArr(dist),pq:clonePq(pq),visited,
+						adjText,edgesText,codeLine:10
+					});
+
+					const top=pqPop();
+					const currentCost=top.cost;
+					const node=top.node;
+
+					pushStep({
+						phase:"dijkstra-loop",
+						type:"pop",
+						text:
+								`Pop from priority queue:
+
+  got {cost:${currentCost}, node:${node}}
+
+This is currently the CHEAPEST known node to expand.`,
+						dist:cloneArr(dist),pq:clonePq(pq),visited,
+						adjText,edgesText,codeLine:11,
+						currentNode:node,currentCost
+					});
+
+					if(currentCost>dist[node]){
+						pushStep({
+							phase:"dijkstra-loop",
+							type:"outdated",
+							text:
+									`Outdated entry:
+
+  currentCost = ${currentCost}
+  dist[${node}] = ${dist[node]===Infinity?"∞":dist[node]}
+
+Since currentCost > dist[${node}],
+we already know a cheaper path to node ${node}.
+
+So we skip this entry.`,
+							dist:cloneArr(dist),pq:clonePq(pq),visited,
+							adjText,edgesText,codeLine:12,
+							currentNode:node,currentCost
+						});
+						continue;
+					}
+
+					visited.add(node);
+					pushStep({
+						phase:"dijkstra-loop",
+						type:"expand",
+						text:
+								`Expand node ${node}.
+
+We accept:
+  dist[${node}] = ${currentCost}
+
+Now we look at all neighbors of ${node}
+and see if going through ${node} gives cheaper paths.`,
+						dist:cloneArr(dist),pq:clonePq(pq),visited,
+						adjText,edgesText,codeLine:14,
+						currentNode:node,currentCost
+					});
+
+					for(const e of graph[node]){
+						const neighbor=e.to;
+						const w=e.w;
+
+						pushStep({
+							phase:"dijkstra-loop",
+							type:"check-neighbor",
+							text:
+									`Check neighbor of node ${node}:
+
+Edge:
+  ${node} → ${neighbor} with weight = ${w}
+
+We will compute the cost of going:
+start → ... → ${node} → ${neighbor}.`,
+							dist:cloneArr(dist),pq:clonePq(pq),visited,
+							adjText,edgesText,codeLine:15,
+							currentNode:node,currentCost,neighbor,
+							activeEdge:{u:node,v:neighbor}
+						});
+
+						const newCost=currentCost+w;
+
+						pushStep({
+							phase:"dijkstra-loop",
+							type:"compute-newCost",
+							text:
+									`Compute candidate cost to neighbor ${neighbor}:
+
+  newCost = currentCost + w
+           = ${currentCost} + ${w}
+           = ${newCost}`,
+							dist:cloneArr(dist),pq:clonePq(pq),visited,
+							adjText,edgesText,codeLine:16,
+							currentNode:node,currentCost,neighbor,newCost,
+							activeEdge:{u:node,v:neighbor}
+						});
+
+						if(newCost<dist[neighbor]){
+							const oldVal=dist[neighbor];
+							dist[neighbor]=newCost;
+							pqPush(newCost,neighbor);
+
+							pushStep({
+								phase:"dijkstra-loop",
+								type:"relax",
+								text:
+										`Relaxation: found a cheaper path.
+
+Old dist[${neighbor}] = ${oldVal===Infinity?"∞":oldVal}
+New candidate        = ${newCost}
+
+Since ${newCost} < ${oldVal===Infinity?"∞":oldVal}, we UPDATE:
+
+  dist[${neighbor}] ← ${newCost}
+  push {cost:${newCost}, node:${neighbor}} into PQ.`,
+								dist:cloneArr(dist),pq:clonePq(pq),visited,
+								adjText,edgesText,codeLine:17,
+								currentNode:node,currentCost,neighbor,newCost,
+								updatedIndex:neighbor,
+								activeEdge:{u:node,v:neighbor}
+							});
+						}else{
+							pushStep({
+								phase:"dijkstra-loop",
+								type:"no-relax",
+								text:
+										`No relaxation:
+
+Current dist[${neighbor}] = ${dist[neighbor]===Infinity?"∞":dist[neighbor]}
+New candidate cost       = ${newCost}
+
+Because newCost is NOT smaller,
+we keep the old dist[${neighbor}] and do not push a new entry.`,
+								dist:cloneArr(dist),pq:clonePq(pq),visited,
+								adjText,edgesText,codeLine:18,
+								currentNode:node,currentCost,neighbor,newCost,
+								activeEdge:{u:node,v:neighbor}
+							});
+						}
+					}
+				}
+
+				pushStep({
+					phase:"done",
+					type:"finished",
+					text:
+							`Priority queue is empty.
+
+Dijkstra is done.
+
+dist[i] now holds the final shortest path costs
+from start=${START} to every node i.
+
+If dist[i] is ∞, node i is unreachable from the start.`,
+					dist:cloneArr(dist),pq:[],visited,
+					adjText,edgesText,codeLine:21
+				});
+			}
+
+			function show(k){
+				const s=steps[k];
+				const dist=s.dist;
+				const pq=s.pq;
+				const visited=s.visited;
+				const currentNode=s.currentNode;
+				const currentCost=s.currentCost;
+				const neighbor=s.neighbor;
+				const newCost=s.newCost;
+
+				renderNodes(dist,visited,currentNode,neighbor);
+				renderGraphSvg(dist,visited,currentNode,neighbor,s.activeEdge);
+				renderAdj(s.adjText,s.edgesText);
+				renderDist(dist,s.updatedIndex);
+				renderPq(pq,currentNode);
+				renderCode(s.codeLine);
+
+				elType.textContent=s.type;
+				elPanel.textContent=s.text;
+				elStepInfo.textContent=`Step ${k+1} / ${steps.length}`;
+				elTrail.textContent=`start = ${START}`;
+				elMetaPhase.textContent=s.phase;
+				elMetaNode.textContent=(currentNode===null?"–":currentNode);
+				elMetaCost.textContent=(currentCost===null?"–":currentCost);
+				elMetaNeighbor.textContent=(neighbor===null?"–":neighbor);
+				elMetaNewCost.textContent=(newCost===null?"–":newCost);
+			}
+
+			function gen(){
+				steps=[]; idx=-1;
+				const {adjText,edgesText}=parseEdgesAndBuildSteps();
+				dijkstraSteps(adjText,edgesText);
+				if(steps.length){
+					idx=0;
+					show(idx);
+					elPrev.disabled=false;
+					elNext.disabled=false;
+				}
+			}
+
+			function prevStep(){
+				if(idx>0){ idx--; show(idx); }
+			}
+			function nextStep(){
+				if(idx<steps.length-1){ idx++; show(idx); }
+			}
+			function reset(){
+				steps=[]; idx=-1;
+				elNodes.innerHTML="";
+				elAdjView.textContent="Adjacency list will appear here after “Generate”.";
+				elEdgesView.textContent="Raw edges will appear here after “Generate”.";
+				elDistRow.innerHTML="";
+				elPqRow.innerHTML="";
+				elPanel.textContent="Click “Generate” to start from edges → adjacency list → Dijkstra.";
+				elStepInfo.textContent="";
+				elTrail.textContent="—";
+				elMetaPhase.textContent="–";
+				elMetaNode.textContent="–";
+				elMetaCost.textContent="–";
+				elMetaNeighbor.textContent="–";
+				elMetaNewCost.textContent="–";
+				elType.textContent="—";
+				elPrev.disabled=true;
+				elNext.disabled=true;
+				renderCode(null);
+				elSvg.innerHTML="<defs>"+elSvg.querySelector('defs')?.innerHTML+"</defs>";
+			}
+
+			document.getElementById('gen').onclick=gen;
+			document.getElementById('prev').onclick=prevStep;
+			document.getElementById('next').onclick=nextStep;
+			document.getElementById('reset').onclick=reset;
+
+			renderCode(null);
+		</script>
+	</body>
+</html>

@@ -1,0 +1,297 @@
+<div id="hs-widget"></div>
+<style>
+	/* Scoped to #hs-widget so it won't collide with your QuickSort block */
+	#hs-widget{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;color:#0f172a}
+	#hs-widget .card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:12px;margin:10px 0}
+	#hs-widget .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+	#hs-widget input,#hs-widget button,#hs-widget select{padding:8px 10px;border:1px solid #aaa;border-radius:10px;font-size:14px;background:#fff}
+	#hs-widget button{cursor:pointer}
+	#hs-widget button:disabled{opacity:.5;cursor:not-allowed}
+	#hs-widget .array{display:flex;gap:8px;flex-wrap:wrap}
+	#hs-widget .el{width:40px;height:42px;border:2px solid #111;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:800;background:#fff;position:relative}
+	#hs-widget .inactive{opacity:.28}
+	#hs-widget .root{background:#ffd4d4}
+	#hs-widget .scan{background:#c7f9cc}
+	#hs-widget .swap{background:#ffe680}
+	#hs-widget .ix{position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);font-size:10px;color:#64748b}
+	#hs-widget .panel{white-space:pre-wrap;border:1px solid #e5e7eb;background:#fff;border-radius:10px;padding:10px;line-height:1.6}
+	#hs-widget .hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+	#hs-widget .badge{font-family:ui-monospace,Menlo,monospace;background:#ecfeff;border:1px solid #a5f3fc;color:#155e75;padding:2px 8px;border-radius:999px;font-size:12px}
+	#hs-widget .meta{display:flex;gap:12px;color:#475569;font-size:13px;margin-top:8px;flex-wrap:wrap}
+	#hs-widget .legend{display:flex;gap:10px;color:#475569;font-size:12px;margin-top:8px;flex-wrap:wrap}
+	#hs-widget .dot{display:inline-block;width:10px;height:10px;border-radius:999px;margin-right:5px;border:1px solid #0f172a}
+	#hs-widget .dot.root{background:#ffd4d4}.dot.scan{background:#c7f9cc}.dot.swap{background:#ffe680}.dot.fade{background:#fff;opacity:.4}
+	/* Tree */
+	#hs-widget .tree-wrap{overflow:auto;border:1px solid #e5e7eb;border-radius:10px;background:#fff}
+	#hs-widget svg{display:block}
+	#hs-widget .node{paint-order:stroke;stroke:#111;stroke-width:2}
+	#hs-widget .idx{font-size:10px;fill:#64748b}
+	#hs-widget .edge{stroke:#94a3b8;stroke-width:2}
+</style>
+<script>
+	(function(){
+		// mount inside the provided container so we don't collide with your QuickSort
+		const root = document.getElementById('hs-widget');
+		root.innerHTML = `
+    <div class="card">
+      <div style="font-weight:800;font-size:16px">HeapSort (Max/Min)</div>
+      <div class="controls" style="margin-top:8px">
+        <input id="hs_arr" value="9,4,1,7,3,8,2,6,5" size="40" />
+        <select id="hs_mode"><option value="max" selected>Max-heap</option><option value="min">Min-heap</option></select>
+        <button id="hs_gen">Generate</button>
+        <button id="hs_prev" disabled>Previous</button>
+        <button id="hs_next" disabled>Next</button>
+        <button id="hs_reset">Reset</button>
+        <span id="hs_info" style="margin-left:8px;color:#475569"></span>
+      </div>
+      <div class="legend">
+        <span><span class="dot root"></span>root</span>
+        <span><span class="dot scan"></span>current node / child being checked</span>
+        <span><span class="dot swap"></span>recently swapped</span>
+        <span><span class="dot fade"></span>sorted part (outside heap)</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="array" id="hs_array"></div>
+      <div class="meta">
+        <div><b>Heap:</b> <span id="hs_heap">–</span></div>
+        <div><b>i (node):</b> <span id="hs_i">–</span></div>
+        <div><b>l/r children:</b> <span id="hs_lr">–</span></div>
+        <div><b>heapSize:</b> <span id="hs_hs">–</span></div>
+        <div><b>phase:</b> <span id="hs_phase">–</span></div>
+        <div><b>tip:</b> <span id="hs_tip">index→tree: left=2i+1, right=2i+2</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="hdr"><div class="badge" id="hs_type">—</div><div style="color:#475569;font-size:13px" id="hs_bc">—</div></div>
+      <div class="panel" id="hs_panel">Click “Generate”.</div>
+    </div>
+    <div class="card tree-wrap">
+      <svg id="hs_tree" width="860" height="360" aria-label="heap tree"></svg>
+    </div>
+  `;
+
+		// small helper
+		const $ = sel => root.querySelector(sel);
+
+		// state
+		let steps=[], idx=-1, arr0=[9,4,1,7,3,8,2,6,5];
+
+		// DOM
+		const elA=$('#hs_array'), elInfo=$('#hs_info'), elHeap=$('#hs_heap'), elI=$('#hs_i'),
+				elLR=$('#hs_lr'), elHS=$('#hs_hs'), elPhase=$('#hs_phase'),
+				elType=$('#hs_type'), elPanel=$('#hs_panel'), elBC=$('#hs_bc'), elTree=$('#hs_tree');
+
+		// renderers
+		function renderArray(a, heapSize, focus=-1, hi=[], swapped=[]){
+			elA.innerHTML='';
+			a.forEach((v,i)=>{
+				const d=document.createElement('div'); d.className='el'; d.textContent=v;
+				if(i>=heapSize) d.classList.add('inactive');
+				if(i===0 && heapSize>0) d.classList.add('root');
+				if(i===focus || hi.includes(i)) d.classList.add('scan');
+				if(swapped.includes(i)) d.classList.add('swap');
+				const ix=document.createElement('div'); ix.className='ix'; ix.textContent=i; d.appendChild(ix);
+				elA.appendChild(d);
+			});
+		}
+
+		function renderTree(a, heapSize, focus=-1, hi=[]){
+			const W=860,H=360, padX=28, levelH=80; // simple fixed canvas
+			elTree.setAttribute('width', W); elTree.setAttribute('height', H);
+			while(elTree.firstChild) elTree.removeChild(elTree.firstChild);
+			const levels=[]; // group indices by depth
+			for(let i=0;i<heapSize;i++){ const d=Math.floor(Math.log2(i+1)); (levels[d]||(levels[d]=[])).push(i); }
+
+			const mk = (name,attrs) => {
+				const el = document.createElementNS('http://www.w3.org/2000/svg',name);
+				for(const k in attrs) el.setAttribute(k, attrs[k]);
+				return el;
+			};
+
+			const pos=new Map();
+			levels.forEach((arr,depth)=>{
+				const y=40+depth*levelH;
+				const count=arr.length; const space=(W-2*padX)/(count+1);
+				arr.forEach((i,ix)=>{ const x=padX + (ix+1)*space; pos.set(i,{x,y}); });
+			});
+
+			// edges
+			for(let i=0;i<heapSize;i++){
+				const l=2*i+1, r=2*i+2; const p=pos.get(i);
+				if(!p) continue;
+				if(l<heapSize){ const c=pos.get(l); elTree.appendChild(mk('line',{x1:p.x,y1:p.y+2,x2:c.x,y2:c.y-2,class:'edge'})); }
+				if(r<heapSize){ const c=pos.get(r); elTree.appendChild(mk('line',{x1:p.x,y1:p.y+2,x2:c.x,y2:c.y-2,class:'edge'})); }
+			}
+
+			// nodes
+			for(let i=0;i<heapSize;i++){
+				const {x,y}=pos.get(i);
+				const isRoot=(i===0), isFocus=(i===focus), isHi=hi.includes(i);
+				const fill = isRoot ? '#ffd4d4' : (isFocus || isHi ? '#c7f9cc' : '#fff');
+				elTree.appendChild(mk('circle',{cx:x,cy:y,r:16,fill, class:'node'}));
+				elTree.appendChild(mk('text',{x, y:y, 'text-anchor':'middle','dominant-baseline':'middle','font-size':'12'},)).textContent = a[i];
+				const idxText = mk('text',{x, y:y+24, 'text-anchor':'middle','dominant-baseline':'middle', class:'idx'}); idxText.textContent = `i=${i}`; elTree.appendChild(idxText);
+			}
+		}
+
+		// trace helpers
+		function pushStep(arr, meta, text){ steps.push({arr:arr.slice(), meta:{...meta}, text}); }
+		const L=i=>2*i+1, R=i=>2*i+2;
+		const better=(mode,a,b)=> mode==='max'? a>b : a<b;
+
+		function nodePath(i){
+			// path from root to i (indices)
+			const path=[];
+			while(i>=0){ path.push(i); if(i===0) break; i = Math.floor((i-1)/2); }
+			return path.reverse().join(' → ');
+			// e.g., "0 → 2 → 6"
+		}
+
+		function explainVisit(i,left,right,heapSize,mode,a){
+			const inL = left<heapSize ? `a[${left}]=${a[left]}` : '—';
+			const inR = right<heapSize ? `a[${right}]=${a[right]}` : '—';
+			return [
+				`FOCUS node i=${i} (path ${nodePath(i)}).`,
+				`Check its children using array→tree mapping: left=2*i+1=${left}, right=2*i+2=${right}.`,
+				`Inside current heap a[0..${heapSize-1}]: left=${inL}, right=${inR}.`,
+				`Rule (${mode}-heap): parent must be ${mode==='max'?'≥ largest child':'≤ smallest child'}.`
+			].join('\n');
+		}
+
+		function explainChoose(i,best,a,mode){
+			const rel = mode==='max' ? 'larger than' : 'smaller than';
+			return `Choose child @ index ${best} because a[${best}]=${a[best]} is ${rel} the current candidate a[${i}]=${a[i]}.`;
+		}
+
+		function explainSwap(i,best,a,mode){
+			return [
+				`SWAP needed: parent violates ${mode}-heap order with chosen child.`,
+				`Swap a[${i}]=${a[best]} with a[${best}]=${a[i]} so the parent is ${mode==='max'?'bigger':'smaller'} than its children.`,
+				`After swapping, CONTINUE from the child index (now i=${best}) because the moved value might still violate heap order deeper down.`
+			].join('\n');
+		}
+
+		function explainHeapOk(i){
+			return `Heap OK at i=${i}: no child beats the parent → stop sifting this branch and RETURN to the caller.`;
+		}
+
+		function siftDown(a,i,heapSize,mode,phase){
+			while(true){
+				const left=L(i), right=R(i);
+				pushStep(a,{type:'visit', i,left,right, heapSize, phase},
+						explainVisit(i,left,right,heapSize,mode,a)
+				);
+
+				let best=i;
+				if(left<heapSize && better(mode,a[left],a[best])){
+					const note = explainChoose(best,left,a,mode);
+					best=left;
+					pushStep(a,{type:'choose-left', i, best, left, right, heapSize, phase}, note);
+				}
+				if(right<heapSize && better(mode,a[right],a[best])){
+					const from = best===left ? left : i;
+					const note = `Right child wins: a[${right}]=${a[right]} beats current candidate a[${from}]=${a[from]}.`;
+					best=right;
+					pushStep(a,{type:'choose-right', i, best, left, right, heapSize, phase}, note);
+				}
+
+				if(best!==i){
+					// explain before swap (use pre-swap values)
+					const swapNote = explainSwap(i,best,a,mode);
+					[a[i],a[best]]=[a[best],a[i]];
+					pushStep(a,{type:'swap', i, j:best, heapSize, swapped:[i,best], phase}, swapNote);
+					i=best; // go deeper
+				}else{
+					pushStep(a,{type:'heap-ok', i, heapSize, phase}, explainHeapOk(i));
+					break;
+				}
+			}
+		}
+
+		function heapSortTrace(a,mode){
+			const n=a.length;
+			if(n===0){ pushStep(a,{type:'base',heapSize:0,phase:'init'},'Empty array → nothing to do.'); return; }
+
+			// BUILD HEAP (bottom-up)
+			pushStep(a,{type:'phase', heapSize:n, phase:'build'},
+					`PHASE 1 — BUILD ${mode.toUpperCase()} HEAP (bottom-up)
+We treat a[0..${n-1}] as a complete binary tree:
+  • index 0 is the root,
+  • for node i: left=2*i+1, right=2*i+2.
+Start from the last internal node ⌊(n-2)/2⌋ and sift each node down.
+Why bottom-up? Because leaves are already heaps; fixing parents from bottom ensures each subtree is valid when visited.`);
+			for(let i=Math.floor((n-2)/2); i>=0; i--){
+				pushStep(a,{type:'target', i, heapSize:n, phase:'build'},
+						`Target node i=${i}. We'll SIFT-DOWN here to enforce ${mode}-heap in its subtree.`);
+				siftDown(a, i, n, mode, 'build');
+			}
+			pushStep(a,{type:'heap-built', heapSize:n, phase:'build'},
+					`Done building: now the array represents a valid ${mode}-heap.
+${mode==='max'?'The largest element is at the root a[0].':'The smallest element is at the root a[0].'}`);
+
+			// EXTRACT ROOT repeatedly
+			let heapSize=n;
+			pushStep(a,{type:'phase', heapSize, phase:'extract'},
+					`PHASE 2 — EXTRACT ROOT & SHRINK HEAP
+Loop while heapSize>1:
+  1) Swap root a[0] with last inside-heap element a[heapSize-1] → this places the ${mode==='max'?'largest':'smallest'} at its final sorted spot.
+  2) Decrease heapSize by 1 (sorted tail grows on the right).
+  3) Sift-down the new root to restore the heap property.`);
+			while(heapSize>1){
+				[a[0],a[heapSize-1]]=[a[heapSize-1],a[0]];
+				pushStep(a,{type:'extract-swap', heapSize, swapped:[0,heapSize-1], phase:'extract'},
+						`Extract step: swap root a[0] with a[${heapSize-1}] so the ${mode==='max'?'largest':'smallest'} moves into its FINAL sorted position (${heapSize-1}).`);
+				heapSize--;
+				pushStep(a,{type:'shrink', heapSize, phase:'extract'},
+						`Shrink heap to a[0..${heapSize-1}]. The right side a[${heapSize}..${a.length-1}] is DONE (sorted).
+Now SIFT-DOWN the new root to fix the heap again.`);
+				siftDown(a, 0, heapSize, mode, 'extract');
+			}
+			pushStep(a,{type:'done', heapSize:1, phase:'done'},
+					`All done. With a ${mode}-heap:
+  • ${mode==='max'?'ascending':'descending'} order is produced in-place.
+  • No extra arrays are needed (O(1) extra space).
+  • Time is O(n log n).`);
+		}
+
+		// UI
+		function show(k){
+			const s=steps[k], m=s.meta, a=s.arr; const heapSize=m.heapSize ?? a.length;
+			const hi=[]; if(m.left!=null&&m.left<heapSize) hi.push(m.left); if(m.right!=null&&m.right<heapSize) hi.push(m.right);
+			renderArray(a,heapSize,m.i??-1,hi,m.swapped||[]);
+			renderTree(a,heapSize,m.i??-1,hi);
+			elHeap.textContent = heapSize? `a[0..${heapSize-1}]` : '–';
+			elI.textContent = m.i!=null? m.i : '–';
+			elLR.textContent = (m.left!=null||m.right!=null)? `l=${m.left??'–'}, r=${m.right??'–'}` : '–';
+			elHS.textContent = heapSize; elPhase.textContent = m.phase || '—';
+			elType.textContent = m.type || '—';
+			elPanel.textContent = s.text;
+			elInfo.textContent = `Step ${k+1}/${steps.length}`;
+			elBC.textContent = 'heap sort';
+		}
+
+		function gen(){
+			const raw=$('#hs_arr').value.trim(); const mode=$('#hs_mode').value;
+			const nums=raw.split(/[,.\s]+/).map(n=>parseInt(n,10)).filter(n=>!Number.isNaN(n)); if(nums.length) arr0=nums;
+			steps=[]; idx=-1; const work=arr0.slice(); heapSortTrace(work,mode); idx=0; show(idx);
+			$('#hs_prev').disabled=false; $('#hs_next').disabled=false;
+		}
+		function prev(){ if(idx>0){ idx--; show(idx); } }
+		function next(){ if(idx<steps.length-1){ idx++; show(idx); } }
+		function reset(){
+			steps=[]; idx=-1;
+			renderArray(arr0,arr0.length,-1,[],[]);
+			renderTree(arr0,arr0.length,-1,[]);
+			elHeap.textContent='–'; elI.textContent='–'; elLR.textContent='–'; elHS.textContent='–'; elPhase.textContent='—';
+			elType.textContent='—'; elPanel.textContent='Click “Generate”.'; elInfo.textContent=''; elBC.textContent='—';
+			$('#hs_prev').disabled=true; $('#hs_next').disabled=true;
+		}
+
+		$('#hs_gen').onclick=gen; $('#hs_prev').onclick=prev; $('#hs_next').onclick=next; $('#hs_reset').onclick=reset;
+		// initial paint
+		reset();
+	})();
+</script>
+
+ 

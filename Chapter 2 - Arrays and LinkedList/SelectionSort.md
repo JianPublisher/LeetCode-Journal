@@ -1,27 +1,61 @@
-Selection Sort 
+# Selection Sort
 
-Its basically looping through the list and getting max num all the time, put it in position 1, continue 
-- O(n ^ 2)
+Selection sort loops through the list, repeatedly finding the **smallest** (or largest) value and placing it in the correct position.
 
-Why selection sort is O(n²)
-Selection sort does this:
-Scan the whole array to find the smallest item
-Put it in position 0
-Scan the rest to find the next smallest
-Put it in position 1
-Repeat…
+- Runtime: **O(n²)**
+- Simple to understand, but **not fast**
+- Faster alternative: **Quicksort (O(n log n))**
 
-The scans look like this:
-First pass: scan n items
-Second pass: scan n−1 items
-Third pass: scan n−2 items
-…
-Last pass: scan 1 item
+---
 
-Selection Sort is a neat algorithm, but its not fast
-!! Quick sort is a faster algorithm since it takes O(n log n)
+## Why Selection Sort Is O(n²)
 
+Selection sort performs multiple scans of the array:
 
-So theres 2 common variations 
-1) Find smallest -> append to new array 
-2) Find largest -> place it at the end of the same array 
+1. **Scan entire array** to find the smallest → place at index 0
+2. **Scan remaining elements** to find the next smallest → place at index 1
+3. Repeat…
+
+The scans look like:
+
+- First: `n` items
+- Second: `n - 1`
+- Third: `n - 2`
+- …
+- Last: `1`
+
+This produces the series:
+
+n + (n−1) + (n−2) + ... + 1
+
+csharp
+Copy code
+
+Which equals:
+
+n(n + 1) / 2 → O(n²)
+
+yaml
+Copy code
+
+---
+
+## Variations of Selection Sort
+
+There are two common ways to implement it:
+
+### 1) Find the **smallest** element
+- Append it to a **new array**
+- Continue until original array is empty
+
+### 2) Find the **largest** element
+- Place it at the **end of the same array**
+- Continue filling from the back
+
+---
+
+## Summary
+- Easy algorithm, but inefficient for large lists
+- Performs many repeated scans
+- **Always O(n²)** regardless of input
+- Prefer **quicksort** or other O(n log n) algorithms for performance

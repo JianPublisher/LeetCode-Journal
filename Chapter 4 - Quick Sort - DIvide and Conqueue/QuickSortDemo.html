@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>QuickSort — Lomuto (ONE PANEL, step-by-step)</title>
+		<style>
+			:root{
+				--ink:#0f172a; --sub:#475569; --bg:#f6f7fb; --card:#fff; --br:#e5e7eb;
+				--pivot:#ffd4d4; --scan:#c7f9cc; --swap:#ffe680; --inactive:.28;
+			}
+			*{box-sizing:border-box}
+			body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);margin:0;padding:22px;line-height:1.55}
+
+			/* Replace semantic <h1> with styled non-heading to avoid Confluence TOC */
+			.h1{font-size:24px;font-weight:800;margin:0 0 10px}
+			.sub{color:var(--sub);margin:2px 0 14px;font-size:14px}
+
+			.card{background:var(--card);border:1px solid var(--br);border-radius:12px;padding:14px;margin-bottom:12px}
+			.row{display:grid;grid-template-columns:1fr;gap:12px}
+			.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+			input,button,select{padding:8px 10px;border:1px solid #aaa;border-radius:10px;font-size:14px;background:#fff}
+			button{cursor:pointer} button:disabled{opacity:.5;cursor:not-allowed}
+
+			.array{display:flex;gap:8px;flex-wrap:wrap}
+			.el{width:52px;height:54px;border:2px solid #111;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:800;background:#fff;position:relative}
+			.el.inactive{opacity:var(--inactive)}
+			.el.pivot{background:var(--pivot)!important}
+			.el.scan{background:var(--scan)!important}
+			.el.swap{background:var(--swap)!important}
+			.ix{position:absolute;bottom:-16px;left:50%;transform:translateX(-50%);font-size:10px;color:#475569}
+			.markers{display:flex;gap:10px;margin-top:28px;color:#334155;font-size:13px}
+
+			#panel{white-space:pre-wrap;border:1px solid var(--br);background:#fff;border-radius:10px;padding:12px;line-height:1.6}
+			.k{font-weight:700;color:#0b132b}
+			.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#0b1220;color:#eaeefb;border-radius:8px;padding:8px;margin-top:8px;font-size:13px}
+			.hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+			.badge{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#ecfeff;border:1px solid #a5f3fc;color:#155e75;padding:2px 8px;border-radius:999px;font-size:12px}
+		</style>
+	</head>
+	<body>
+
+		<div class="h1">QuickSort (Lomuto)</div>
+		<p class="sub">Single panel explains exactly what you’re doing, why, and what happens next. Focus is always the active subarray <code>a[l..r]</code>.</p>
+
+		<div class="card">
+			<div class="controls">
+				<input id="arrInput" value="9,4,1,7,3,8,2,6,5" size="40" />
+				<select id="pivotMode" title="Pivot choice">
+					<option value="last" selected>Pivot = last (textbook)</option>
+					<option value="middle">Pivot = middle → move to end</option>
+					<option value="random">Pivot = random → move to end</option>
+				</select>
+				<button id="gen">Generate</button>
+				<button id="prev" disabled>Previous</button>
+				<button id="next" disabled>Next</button>
+				<button id="reset">Reset</button>
+				<span id="stepInfo" style="margin-left:8px;color:#475569"></span>
+			</div>
+		</div>
+
+		<div class="card">
+			<div id="array" class="array"></div>
+			<div class="markers">
+				<div><b>Active:</b> <span id="activeRange">–</span></div>
+				<div><b>i:</b> <span id="iVal">–</span></div>
+				<div><b>j:</b> <span id="jVal">–</span></div>
+				<div><b>pivot:</b> <span id="pivVal">–</span></div>
+				<div><b>depth:</b> <span id="depthVal">0</span></div>
+			</div>
+		</div>
+
+		<div class="card">
+			<div class="hdr">
+				<div class="badge" id="stepType">—</div>
+				<div style="color:#475569;font-size:13px" id="breadcrumb">—</div>
+			</div>
+			<div id="panel">Click “Generate”.</div>
+		</div>
+
+		<script>
+			/* ===========================
+			   State + elements
+			=========================== */
+			let steps = [];
+			let idx = -1;
+			let arr0 = [9,4,1,7,3,8,2,6,5];
+
+			const elA = document.getElementById('array');
+			const elStepInfo = document.getElementById('stepInfo');
+			const elActive = document.getElementById('activeRange');
+			const elI = document.getElementById('iVal');
+			const elJ = document.getElementById('jVal');
+			const elP = document.getElementById('pivVal');
+			const elD = document.getElementById('depthVal');
+			const elType = document.getElementById('stepType');
+			const elPanel = document.getElementById('panel');
+			const elTrail = document.getElementById('breadcrumb');
+			const elPrev = document.getElementById('prev');
+			const elNext = document.getElementById('next');
+			const elMode = document.getElementById('pivotMode');
+
+			/* ===========================
+			   Helpers
+			=========================== */
+			function render(a, pivotIndex=-1, highlightIdx=-1, swapped=[], l=0, r=a.length-1){
+				elA.innerHTML = '';
+				a.forEach((v,i)=>{
+					const d=document.createElement('div');
+					d.className='el';
+					d.textContent=v;
+					if(i<l||i>r){ d.classList.add('inactive'); }
+					if(i===pivotIndex){ d.classList.add('pivot'); }
+					if(i===highlightIdx){ d.classList.add('scan'); }
+					if(swapped.includes(i)){ d.classList.add('swap'); }
+					const ix=document.createElement('div');
+					ix.className='ix';
+					ix.textContent=i;
+					d.appendChild(ix);
+					elA.appendChild(d);
+				});
+			}
+
+			function pushStep(arr, meta, explain){
+				steps.push({
+					arr: arr.slice(),
+					meta: {...meta},
+					text: explain
+				});
+			}
+
+			function trailStr(trail){
+				if(!trail || !trail.length) return '—';
+				return trail.map(([L,R])=>`a[${L}..${R}]`).join(' → ');
+			}
+
+			function pickPivotIndex(arr, l, r, mode){
+				if(mode==='last') return r;
+				if(mode==='random') return l + Math.floor(Math.random()*(r-l+1));
+				return Math.floor((l+r)/2); // middle
+			}
+
+			/* ===========================
+			   Partition with single-panel narration
+			=========================== */
+			function partition(a,l,r,mode,depth,trail){
+				let k = pickPivotIndex(a,l,r,mode);
+				let chosen = a[k];
+
+				pushStep(a,
+						{type:'choose', l,r,i:l,j:null,pivotIndex:k,pivotVal:chosen,depth,trail:trail.concat([[l,r]])},
+						`You are focusing on the subarray a[${l}..${r}].
+1) Choose a pivot for THIS subarray. We pick a[${k}] = ${chosen}.
+Why: we need one reference value to split small vs large within this window.`);
+
+				if(k !== r){
+					[a[k],a[r]] = [a[r],a[k]];
+					pushStep(a,
+							{type:'movePivot', l,r,i:l,j:null,pivotIndex:r,pivotVal:chosen,swapped:[k,r],depth,trail:trail.concat([[l,r]])},
+							`Move the chosen pivot to the end at index r=${r}.
+Why: Lomuto scans j from l..r-1 and keeps the pivot parked at a[r] so placement is easy later.`);
+				}
+
+				const pivot = a[r];
+				let i = l;
+
+				for(let j=l; j<r; j++){
+					pushStep(a,
+							{type:'compare', l,r,i,j,pivotIndex:r,pivotVal:pivot,depth,trail:trail.concat([[l,r]])},
+							`Scanning j=${j}. Compare a[${j}]=${a[j]} with pivot=${pivot}.
+Goal: build two zones as we go:
+  • a[${l}..${i-1}]  < pivot
+  • a[${i}..${j-1}] ≥ pivot
+j points at the current item being decided.`);
+					if(a[j] < pivot){
+						[a[i],a[j]] = [a[j],a[i]];
+						pushStep(a,
+								{type:'swap', l,r,i:i+1,j,pivotIndex:r,pivotVal:pivot,swapped:[i,j],depth,trail:trail.concat([[l,r]])},
+								`a[${j}] is smaller than pivot → swap into the left zone at index i=${i}.
+Then advance i → i=${i+1}.
+Why: we extend the "< pivot" zone by one.`);
+						i++;
+					}else{
+						pushStep(a,
+								{type:'noSwap', l,r,i,j,pivotIndex:r,pivotVal:pivot,depth,trail:trail.concat([[l,r]])},
+								`a[${j}] is NOT smaller (≥ pivot) → leave it in place.
+Why: these accumulate in the "≥ pivot" zone to the right of i.`);
+					}
+				}
+
+				[a[i],a[r]] = [a[r],a[i]];
+				pushStep(a,
+						{type:'placePivot', l,r,i,j:r,pivotIndex:i,pivotVal:pivot,swapped:[i,r],depth,trail:trail.concat([[l,r]])},
+						`Final step of partition: swap pivot with a[i] so pivot lands at p=i=${i}.
+Now the subarray is split into:
+  • LEFT  a[${l}..${i-1}]  < pivot
+  • PIVOT a[${i}]
+  • RIGHT a[${i+1}..${r}] ≥ pivot
+Important: the pivot is now in its final sorted spot and will never move again.`);
+				return i;
+			}
+
+			/* ===========================
+			   QuickSort that ANNOUNCES recursion clearly
+			=========================== */
+			function quickSort(a,l,r,mode,depth=0,trail=[]){
+				if(l>=r){
+					pushStep(a,
+							{type:'base', l,r,depth,trail:trail.concat([[l,r]])},
+							`Base case at depth ${depth}: a[${l}..${r}] has ≤ 1 element → already sorted here. Return to the caller.`);
+					return;
+				}
+				const p = partition(a,l,r,mode,depth,trail);
+
+				pushStep(a,
+						{type:'recurse-left', l:l, r:p-1, depth:depth+1, trail:trail.concat([[l,r],[l,p-1]])},
+						`Next, we solve the LEFT side a[${l}..${p-1}].
+We DO NOT "move the right" now — we simply switch focus and run the same routine INSIDE the left window (it has its own pivot, i, j, r).`);
+				quickSort(a, l, p-1, mode, depth+1, trail.concat([[l,r]]));
+
+				pushStep(a,
+						{type:'recurse-right', l:p+1, r:r, depth:depth+1, trail:trail.concat([[l,r],[p+1,r]])},
+						`Left done. Now we solve the RIGHT side a[${p+1}..${r}].
+Again: this right window picks its OWN pivot at its local r and repeats the same steps. That’s all “moving the right” means → we process it now.`);
+				quickSort(a, p+1, r, mode, depth+1, trail.concat([[l,r]]));
+			}
+
+			/* ===========================
+			   Show one panel (single text)
+			=========================== */
+			function show(k){
+				const s = steps[k], m = s.meta, a = s.arr;
+				const l = m.l ?? 0, r = m.r ?? (a.length-1);
+				const pivotPos = (m.type==='choose') ? m.pivotIndex : (m.pivotIndex ?? -1);
+				const scanIdx = (m.j!=null) ? m.j : -1;
+				const swapped = m.swapped || [];
+
+				render(a, pivotPos, scanIdx, swapped, l, r);
+
+				elActive.textContent = `a[${l}..${r}]`;
+				elI.textContent = (m.i!=null ? m.i : '–');
+				elJ.textContent = (m.j!=null ? m.j : '–');
+				elP.textContent = (m.pivotVal!=null ? m.pivotVal : '–');
+				elD.textContent = m.depth ?? 0;
+
+				elType.textContent = m.type || '—';
+				elPanel.textContent = s.text;
+				elStepInfo.textContent = `Step ${k+1} / ${steps.length}`;
+				elTrail.textContent = trailStr(m.trail);
+			}
+
+			/* ===========================
+			   Controls
+			=========================== */
+			function gen(){
+				const raw = document.getElementById('arrInput').value.trim();
+				const mode = document.getElementById('pivotMode').value;
+				const nums = raw.split(/[,\s]+/).map(n=>parseInt(n,10)).filter(n=>!Number.isNaN(n));
+				if(nums.length){ arr0 = nums; }
+
+				steps = []; idx = -1;
+
+				const work = arr0.slice();
+				quickSort(work, 0, work.length-1, mode, 0, []);
+				idx = 0; show(idx);
+				elPrev.disabled = false; elNext.disabled = false;
+			}
+
+			function prevStep(){ if(idx>0){ idx--; show(idx); } }
+			function nextStep(){ if(idx<steps.length-1){ idx++; show(idx); } }
+			function reset(){
+				steps=[]; idx=-1;
+				render(arr0, -1, -1, [], 0, (arr0.length?arr0.length-1:0));
+				elActive.textContent='–'; elI.textContent='–'; elJ.textContent='–'; elP.textContent='–';
+				elD.textContent='0'; elType.textContent='—'; elPanel.textContent='Click “Generate”.';
+				elStepInfo.textContent=''; elTrail.textContent='—';
+				elPrev.disabled=true; elNext.disabled=true;
+			}
+
+			/* wire up */
+			document.getElementById('gen').onclick = gen;
+			document.getElementById('prev').onclick = prevStep;
+			document.getElementById('next').onclick = nextStep;
+			document.getElementById('reset').onclick = reset;
+
+			/* initial paint */
+			render(arr0, -1, -1, [], 0, arr0.length-1);
+		</script>
+	</body>
+</html>
