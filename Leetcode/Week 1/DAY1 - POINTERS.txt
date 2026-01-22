@@ -1,0 +1,101 @@
+Day 1
+
+LC 125 Valid Palindrome
+Pattern: Two pointers
+Invariant: outside [l, r] already matched, only need to compare inside
+
+20 min code in Java without looking
+If stuck at 20: read hint/idea, then finish coding
+
+( after u finish coding )
+Pattern:2 pointers
+When: compare from both ends
+Core loop: skip invalid, compare lowercase, l++ r--
+Bug: forgot skipping/ lowercase, wrong pointer move
+
+-------------------------------------------------------------------------------------------------------------
+
+LC 167 Two Sum II - Input Array is Sorted
+Pattern: two pointer
+invariant: if exist is within [l, r], if not found then no answer, so left++ r--, shrink based on sum
+
+Pattern: Two pointers
+When: when comparing from both ends
+core loop: compare sum, if < target left++, if > target then right--
+Bug: forgot to +1 on returned indices (problem wants 1-indexed).
+-------------------------------------------------------------------------------------------------------------
+
+
+LC15 3Sum - triplets where sum of 3 int = target ## Need to return all possible valid triplets
+Design: 3 pointer? ( Yes, -> sort array first, anchor i and then 2 pointer )
+Invariant: within [l and r], for loop, index i we take it as first number, and then we perform 2sum solution ( pointer ) from left to right. The for loop will loop 0 to array.length - 2
+
+Pattern: Loop and 2 sum solution within it, pointer solution for 2sum
+When: During loop, when we access nums[i] we treat it as the first index, then we do pointer from left = i + 1 to right = nums.length - 1
+Coreloop: for loop, and 2sum. Before 2 sum solution, if the nums[i] appeared before skip. within 2 sum solution, if sum of 3 int == 0, we do left++ and right--, but while doing that we skip duplicates.
+// for loop loops to nums.length - 2 //make sure when we do 3 index, theres i and the 2 other number left for left and right, so it doesn ggo out of bound
+// right is nums.length - 1
+Bug: mainly runtime efficiency, dont need set if we check duplicate within the loop, also when we do left++ right-- after finding sum == 0, we can do left < right && instead of left < nums.length - 1
+context: while (left < right && nums[left] == nums[left - 1]) { left++ }
+-------------------------------------------------------------------------------------------------------------
+
+
+LC11 Container with most water
+Design: Two pointers
+Invariant: Loop through whole array, container with max water will always exist unless array length = 1
+
+Pattern: two pointers
+when: while loop on left < right, we move pointer and compare with max
+core loop: While left < right, we compute the max using (minheight between left and right) * (distance between right and left), and then if left is the minHeight,
+we do left++ to find the potential height bigger than right
+Bug: not bug, but when iim checking if I should left++ or right-- at the end, dont need left < right because its already in the while loop
+if (left < right) { left++ } else { right-- } something like this
+
+LC42 Trapping Rain Water
+Design: two pointers
+Invariant: array needs to have more than 2 element. > 2 element, and use maxleft or maxright to find the amount of water we can keep
+
+Pattern: two pointers
+when: We use a while loop with left < right on pointers, left = 0 and right = array.length - 1
+core loop: lh = array[left] and rh = array[right], we compare lh and rh
+if lh < rh, we try to find maxLeft -> maxLeft = Math.max(lh, maxLeft), and then we find how much water we can keep so water += maxLeft - lh (current) , and then left++
+else
+we do right side so
+maxRight = Math.max(right, maxRight)
+water += maxRight - rh
+right--
+!!!! We always advance the side with a smaller current height because that side is the limiting wall)
+
+once loop ends then we return water and done
+bug: no bug but need to try again without asisstant
+
+LC209 - This is a two pointer with sliding window..?
+Design: Two pointer
+Invariant: sliding window is always [left to right], best is minimum length of the window seen so far. Since numbers are positive, left-- decrease sum, right++ increase sum
+
+When: we start with a for loop with right = 0; right < arr.length; right++.
+Core loop: we start by sum+= array[right], and then we do a while loop while(sum >= target), then we check for best right away, then we make it smaller
+once this is done, we return best == max integer value ? 0 : best
+Bug: I did left-- instead of left++ lol. Also the Math.min check needs to come before I do left-- and the sum subtraction for making the sum smaller than target
+
+
+LC125: Valid panlindrome
+Design: definitely 2 pointers
+Invariant: Empty string is always true, if left half == right half, then its a palindrome
+
+When: After making sure current leftChar and rightChar are validDigit or validNumber, we compare, and then we do left++ right-- with pointers to make the window smaller
+core loop: first check if its valid Digit or Number using Character.isLetterOrDigit(theCharacter), and then we compare. if its not the same we return false.
+Also before compare, we need to make sure after removing the nonDigitAndLetter, its not valid string, so we do left == s.length() - 1, if true then empty  string -> return true
+
+
+            while (left < right && !Character.isLetterOrDigit(s.charAt(left))) {
+                left++;
+            }
+
+            while(left < right && !Character.isLetterOrDigit(s.charAt(right))) {
+                right--;
+            }
+
+ or just do this, this works because we make sure we're not comparing like . with , cuz this will return false
+ Bug: not doing that left < right check so it returns false on ".,", expected is true btw
+

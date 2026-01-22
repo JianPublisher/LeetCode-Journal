@@ -1,0 +1,82 @@
+Redo LC125, LC167, LC11, LC42, LC209
+
+l125 done
+l167 done
+lc11 done
+167 done
+42 done
+209 done
+
+Attempt LC3 - Longest SubString without repeating character
+Design: pointer
+Invariant: result - window is within the loop [left to right], no repeating characters
+
+When: sliding window, so for loop with right = 0, loop to end , and we move left when we find duplicate
+Core Loop: For right = 0, right < s.length(), right++; and then if its first occurence, we store the index. If its duplicate, then we take that index of the last occurence + 1
+// bcadcefghjca -> but when we take, say we process 2nd a, it will take the last a, but this is wrong cuz theres duplicated c, so we need Math.max(left, index + 1)
+// this way we know that when we take the one before + 1, to remove that duplicate, we dont go too back
+//and then we do longestLength comparison with Math.max and right - left + 1 ( we + 1 because if its 2 character its 1-0, but we need it to be inclusive so + 1)
+Bug: accidentally did left = Math.max(left, s.charAt(right) + 1); -> wrong
+correct is left = Math.max(left, arr[s.charAt(right)] + 1); since index is stored within arr
+
+
+L424 - Longest repeating characters
+Design - sliding window
+Invariant - answer exist within the window. If its outisde of the window, will need to remove
+
+When: we loop through the string
+Core Loop: Sliding window loop with int right = 0, right < length right++
+1. we first update the frequency of the current
+2. we keep track of the one with most occurence so bestCount = Math.max(best, freq[rightcharIndex]);
+3. now we check if sliding window is correct
+- sliding window is right - left + 1
+- if sliding window - the current max frequency = stuff that is diff
+- if sliding window - current max frequency > k, then it means the stuff that is diff is more than k, which is the amount of times we can replace a letter
+- so we need to make sure it doesnt go over k
+
+while (right - left + 1) - maxCount > k
+l is s.charAt(left) - 'A'
+freq[l]--
+left++
+
+last is we get the max sliding window -> best = Math.max(slidingwindow, best) -> slidingWindow is right - left + 1
+
+
+
+LC1004 - Max consecutive ones III
+Design - sliding window
+invariation - sliding window, if there exist 0, check the amount of 0 we have within, and see how many 0 do we allow within and thats it
+
+when> start
+core loop: start with right = 0 loop all the way to nums.length
+1. we check if numOfZeroes allowed is more than k, if more, then we alter sliding window size
+2. then we check max = Math.max(max, slidingWindow)
+3. done thats it
+
+
+LC567 - Permutation in String -> question mentions about contiguous substring
+design - fixed sliding window
+invariation - well I'll do the design here
+1. have a diff[] = new int[26] for all characters
+2. store the s1 strings to it, do diff[s1.charAt(i) - 'a']++; so that we use it to track the occurence
+3. now we do the first sliding window so diff[s2.charAt(0) - 'a']--; 0 all the way to s1.length()
+4. and then once thats done, we check the amount of non zeros
+
+5. Now, if nonZeroes == 0, return true. Else, we start sliding window loop, we remove 1 at the start and add 1 at the end
+for (int right = s1.length; right < s2.length(); right++) -> right is the character that we are adding to the sliding window
+and for the char that we remove, we start with 0 so we need an int left = 0, and within the loop we need to keep incrementing the left++
+6. kinda confusing yea, but yea so within the loop, we first remove the left index, so we just need to check prev if its !=0, and now we do ++ since prev we did -- for that occurence
+if prev !=0 and now its 0, we can do nonZeroes--, else if prev==0 but now the diff[leftIndex]++ is not 0, then we do nonZeroes++, and then left++;
+7. same thing with right, we just need to check previous, and then do that diff[newRightIndex]--; if prev wasnt 0 and now its 0, we can do nonZeroes--;
+8. Then ultimately check if nonZeroes = 0, then we return true, else continue loop
+
+if loop ends just return false;
+
+LC438 - Find All Anagrams in a String
+- very similar to 567, except instead of returning false right away, we add the index into a list, and thats it
+
+
+LC424, Longest repeating character replacement - need to redo - done
+
+
+

@@ -1,0 +1,27 @@
+Before we start,
+1. Normal stack: can push/pop anything, no ordering guarentee
+Monotonic stack = a stack that stays in one order the whole time.
+Monotonic increasing stack: numbers in the stack go up (bottom → top).
+Monotonic decreasing stack: numbers in the stack go down.
+
+You scan left → right.
+When a new number would “break the order”, you pop until the order is fixed.
+Why it’s useful: it helps you quickly find the next bigger or next smaller thing.
+
+
+
+LC496 (warm-up: next greater w/ stack + map)
+
+LC739 (next greater to the right)
+
+LC503 (circular next greater)
+
+LC901 (span = previous greater)
+
+LC84 (histogram core)
+
+LC907 (range contribution w/ next smaller)
+
+LC42 (trap w/ stack version)
+
+LC155 (quick cooldown)

@@ -10,9 +10,58 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="83a34163-8f42-4bb6-9056-5bc6021abdc3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Leetcode/Chapter 1 - Arrays Strings/ValidNumber.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Leetcode/Chapter 1 - Arrays Strings/img.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Leetcode/Rules.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Leetcode/Week 1/DAY1 - POINTERS.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 1 - Binary Search, Big O/BigONotes.md" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 1 - Binary Search, Big O/BigONotes.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 1 - Binary Search, Big O/BinarySearch.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 1 - Binary Search, Big O/BinarySearch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 1 - Binary Search, Big O/BinarySearchNotes.md" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 1 - Binary Search, Big O/BinarySearchNotes.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 1 - Binary Search, Big O/img.png" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 1 - Binary Search, Big O/img.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 1 - Binary Search, Big O/img_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 1 - Binary Search, Big O/img_1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 2 - Arrays and LinkedList/Array vs LinkedList.md" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 2 - Arrays and LinkedList/Array vs LinkedList.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 2 - Arrays and LinkedList/SelectionSort.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 2 - Arrays and LinkedList/SelectionSort.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 2 - Arrays and LinkedList/SelectionSort.md" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 2 - Arrays and LinkedList/SelectionSort.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 2 - Arrays and LinkedList/img.png" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 2 - Arrays and LinkedList/img.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 3 - Recursion/Recursion.md" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 3 - Recursion/Recursion.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 3 - Recursion/img.png" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 3 - Recursion/img.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 4 - Quick Sort - DIvide and Conqueue/DivideAndConquer.md" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 4 - Quick Sort - DIvide and Conqueue/DivideAndConquer.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 4 - Quick Sort - DIvide and Conqueue/QuickSort.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 4 - Quick Sort - DIvide and Conqueue/QuickSort.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 4 - Quick Sort - DIvide and Conqueue/QuickSort.md" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 4 - Quick Sort - DIvide and Conqueue/QuickSort.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 4 - Quick Sort - DIvide and Conqueue/QuickSortDemo.html" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 4 - Quick Sort - DIvide and Conqueue/QuickSortDemo.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 4 - Quick Sort - DIvide and Conqueue/img.png" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 4 - Quick Sort - DIvide and Conqueue/img.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 4 - Quick Sort - DIvide and Conqueue/img_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 4 - Quick Sort - DIvide and Conqueue/img_1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 4 - Quick Sort - DIvide and Conqueue/img_2.png" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 4 - Quick Sort - DIvide and Conqueue/img_2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 4 - Quick Sort - DIvide and Conqueue/img_3.png" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 4 - Quick Sort - DIvide and Conqueue/img_3.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 5 - HashTables/HashTables.md" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 5 - HashTables/HashTables.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 5 - HashTables/img.png" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 5 - HashTables/img.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 6 - Graphs, breadth first search, topological sort/BreadthFirstSearch.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 6 - Graphs, breadth first search, topological sort/BreadthFirstSearch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 6 - Graphs, breadth first search, topological sort/Dijkstra'sAlgorithm.html" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 6 - Graphs, breadth first search, topological sort/Dijkstra'sAlgorithm.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 6 - Graphs, breadth first search, topological sort/DijkstraAlgo.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 6 - Graphs, breadth first search, topological sort/DijkstraAlgo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 6 - Graphs, breadth first search, topological sort/Graphs.md" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 6 - Graphs, breadth first search, topological sort/Graphs.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 6 - Graphs, breadth first search, topological sort/img.png" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 6 - Graphs, breadth first search, topological sort/img.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 6 - Graphs, breadth first search, topological sort/img_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 6 - Graphs, breadth first search, topological sort/img_1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 6 - Graphs, breadth first search, topological sort/img_3.png" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 6 - Graphs, breadth first search, topological sort/img_3.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 6 - Graphs, breadth first search, topological sort/img_4.png" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 6 - Graphs, breadth first search, topological sort/img_4.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 7 - Greedy ALgorithm/Cheatsheet.md" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 7 - Greedy ALgorithm/Cheatsheet.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 7 - Greedy ALgorithm/GreedyAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 7 - Greedy ALgorithm/GreedyAlgorithm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 7 - Greedy ALgorithm/GreedyAlgorithm.md" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 7 - Greedy ALgorithm/GreedyAlgorithm.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 7 - Greedy ALgorithm/img.png" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 7 - Greedy ALgorithm/img.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 7 - Greedy ALgorithm/img_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 7 - Greedy ALgorithm/img_1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 7 - Greedy ALgorithm/img_2.png" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 7 - Greedy ALgorithm/img_2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chapter 8 - Dynamic Programming/DynamicProgramming.md" beforeDir="false" afterPath="$PROJECT_DIR$/Lessons/Chapter 8 - Dynamic Programming/DynamicProgramming.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeetCode-Journal.iml" beforeDir="false" afterPath="$PROJECT_DIR$/LeetCode-Journal.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Leetcode/Chapter 1 - Arrays Strings/FindTheFirstOccurenceInAString.md" beforeDir="false" afterPath="$PROJECT_DIR$/Leetcode/old/Chapter 1 - Arrays Strings/FindTheFirstOccurenceInAString.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Leetcode/Chapter 1 - Arrays Strings/LongestSubstringWithAtMostTwoDistinctCharacters.md" beforeDir="false" afterPath="$PROJECT_DIR$/Leetcode/old/Chapter 1 - Arrays Strings/LongestSubstringWithAtMostTwoDistinctCharacters.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Leetcode/Chapter 1 - Arrays Strings/LongestSubstringWithoutRepeatingCharacters.md" beforeDir="false" afterPath="$PROJECT_DIR$/Leetcode/old/Chapter 1 - Arrays Strings/LongestSubstringWithoutRepeatingCharacters.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Leetcode/Chapter 1 - Arrays Strings/PalindromeNumber.md" beforeDir="false" afterPath="$PROJECT_DIR$/Leetcode/old/Chapter 1 - Arrays Strings/PalindromeNumber.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Leetcode/Chapter 1 - Arrays Strings/ReverseWordsInAsString.md" beforeDir="false" afterPath="$PROJECT_DIR$/Leetcode/old/Chapter 1 - Arrays Strings/ReverseWordsInAsString.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Leetcode/Chapter 1 - Arrays Strings/ReversedWordsInAStringII.md" beforeDir="false" afterPath="$PROJECT_DIR$/Leetcode/old/Chapter 1 - Arrays Strings/ReversedWordsInAStringII.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Leetcode/Chapter 1 - Arrays Strings/TwoSum.md" beforeDir="false" afterPath="$PROJECT_DIR$/Leetcode/old/Chapter 1 - Arrays Strings/TwoSum.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Leetcode/Chapter 1 - Arrays Strings/TwoSumII.md" beforeDir="false" afterPath="$PROJECT_DIR$/Leetcode/old/Chapter 1 - Arrays Strings/TwoSumII.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Leetcode/Chapter 1 - Arrays Strings/TwoSumIII.md" beforeDir="false" afterPath="$PROJECT_DIR$/Leetcode/old/Chapter 1 - Arrays Strings/TwoSumIII.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Leetcode/Chapter 1 - Arrays Strings/ValidNumber.md" beforeDir="false" afterPath="$PROJECT_DIR$/Leetcode/old/Chapter 1 - Arrays Strings/ValidNumber.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Leetcode/Chapter 1 - Arrays Strings/ValidPalindrome.md" beforeDir="false" afterPath="$PROJECT_DIR$/Leetcode/old/Chapter 1 - Arrays Strings/ValidPalindrome.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Leetcode/Chapter 1 - Arrays Strings/img.png" beforeDir="false" afterPath="$PROJECT_DIR$/Leetcode/old/Chapter 1 - Arrays Strings/img.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,6 +107,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\jcheng\projects\LeetCode-Journal\Lessons" />
       <recent name="C:\Users\jcheng\projects\LeetCode-Journal\LeetCode\src" />
       <recent name="C:\Users\jcheng\projects\LeetCode-Journal\LeetCode" />
       <recent name="C:\Users\jcheng\projects\LeetCode-Journal" />
@@ -91,7 +141,10 @@
       <workItem from="1764868336739" duration="113000" />
       <workItem from="1764885631079" duration="5000" />
       <workItem from="1764885752787" duration="28923000" />
-      <workItem from="1765557906497" duration="4426000" />
+      <workItem from="1765557906497" duration="7841000" />
+      <workItem from="1765643949723" duration="3173000" />
+      <workItem from="1768338817519" duration="2970000" />
+      <workItem from="1768357004212" duration="32835000" />
     </task>
     <servers />
   </component>

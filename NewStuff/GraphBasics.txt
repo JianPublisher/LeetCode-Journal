@@ -1,0 +1,35 @@
+Graph basics
+Node (vertex)
+Edge - connection
+
+If Alaska touches Kamchatka and Alberta
+Alaska -> [Kamchatka, Alberta]
+
+
+Imagine theres 6 territories
+A B C D E F
+
+A touches B, D
+B touches A, C E,
+C touches B, F
+D touches A, E
+E touches B, D, F
+F touches C, E
+
+To utilize graph, we need to turn this map into adjacency list
+A -> [B, D]
+B -> [A, C, E]
+C -> [B, F]
+D -> [A, E]
+E -> [B, D, F]
+F -> [C, E]
+
+Say if A wants to contact another territory, you can only contact neighbor if
+Rule:
+you own "from"
+territory own "to"
+"to" is in neighbors[from]
+
+Example: A contact C is not possible, but A contact B is possible
+
+

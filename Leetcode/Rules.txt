@@ -1,0 +1,18 @@
+For each problem, write 2 lines in notes
+
+Invariant -> stays true every loop
+
+Start ( 5 mins )
+Pattern: Two pointers
+Invariant: outside [l, r] already matched, only need to compare inside
+
+20 min code in Java without looking
+If stuck at 20: read hint/idea, then finish coding
+
+( after u finish coding )
+Pattern:2 pointers
+When: compare from both ends
+Core loop: skip invalid, compare lowercase, l++ r--
+Bug: forgot skipping/ lowercase, wrong pointer move
+
+Invariant is the thing that stays true while you loop
