@@ -11,10 +11,42 @@ Why it’s useful: it helps you quickly find the next bigger or next smaller thi
 
 
 LC496 (warm-up: next greater w/ stack + map)
+Actually super easy
+Design: monotonic stack
 
-LC739 (next greater to the right)
+When: problem revolves around the stack, use the stack to store key(the val) -> next largest number in a HashMap
+Core Loop: we create HashMap and then a stack (with Deque<Integer> stack = new ArrayDeque<>();
+- we loop through string 2, for each string, we check if stack is empty, if its not empty, we check if the number we currently have is bigger than the number in the stack
+- if its bigger, then we store it in the map (stack.pop(), current)
+- once that loop is done, we have 1 more loop for the remaining elements in the stack
+- while stack is not empty, we loop through it and then assign map.put(stack.pop(), -1)
+- once this is done, our map is ready to be used to compute the result
+- loop through s1
+- for the s1[i] -> we just need to do result[i] = map.get(s1[i]) since the map key which is that s1[i] stores the value (next biggest number)
+- done
+Bugs: just some syntax from typing too quick
 
-LC503 (circular next greater)
+LC739 Daily temperatures
+Design: Monotonic stack
+simple design-> super eays, we just need a stack that stores new int[] {theIndex, temperature}
+- we store index because the temperatures are not unique
+- we dont need hashmap, since we store index, we know the location right away ( Different from LC496 because it needs a map due to output being per value in nums1 and answer is built from nums2
+- This is just 1 array -> new int[] temperatures
+
+CoreLoop: we loop it, and then check if currentTemperature > stackpeek()[1]
+- if its bigger, we just store it into the result -> result[index, daysDiff] where
+- int[] temp = stack.pop()
+- index = temp[0];
+- daysDifferent = currentIndex - storedIndex so currentIndex - temp[1]
+= result[index] = currentIndex (or i if ur looping for(int i = 0)) - temp[0]
+
+and then after that we add the current to stack -> stack.push(i, temperatures[i])
+and return result; //because its 0 by default, so we dont need another while loop to loop it to put 0 to the existing stack stuff
+
+
+LC503 (Next Greater Element II)
+
+
 
 LC901 (span = previous greater)
 
