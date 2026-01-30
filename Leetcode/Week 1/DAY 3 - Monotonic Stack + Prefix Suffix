@@ -45,15 +45,53 @@ and return result; //because its 0 by default, so we dont need another while loo
 
 
 LC503 (Next Greater Element II)
-
+- so... we store index ->
+index that have yet to find the next biggest and store it into the stack.
+Every loop we have our currentvalue, and then use it to compare it with the stack values
+we visit the index and see if that fits if yes remove index since thats solved thats it
+- LIFO order is what makes the algorithm correctly match each
 
 
 LC901 (span = previous greater)
+- basically its the same as finding the next greatest because all before the next greatest, if its bigger than that, the the ones before are all valid
+- so all I need is store the span
+- if my current > the stack, then I can pop the stack off and update it with my current bigger price, new span
+- because if the next price is smaller than stack, its going to be just span = 1 anyway and that will be pushed in as well
+- easy and done
 
-LC84 (histogram core)
+LC84 -> largest rectangle histogram
+- we have a stack that store the indices of the bar...
+- if stack is [1, 4, 7], it means height[1] <= height[4] <= height[7]
+- we loop heights.length, we make it <= heights.length so that when it hits heights.length, we make sure theres no pending rectangle waiting to finish
+- but we dont access heights array so it doesnt go out of index, just compute the pending rectangle if theres any
+- for the while loop, we check if the stack height is > current, if its higher, means we cannot include that higher, so we pop and update it with the current
+- mainly because the currentHeight is too short to be included in the rectangle whose height is the topheight,
+- so if its shorter, then we pop the bar out of stack, compute the area then discard it.
+- and then the current height stays the same and may cause more pops...
+
+-> We are not starting from mid and searching both sides., current index is right boundary
+--> so we extend if the left is bigger than the current -> this way its like current Height * how many times we can go to the left
+--> if its smaller than the current, then it wont be a valid rectangle
+1, 5, 6
+Current height = 2
+
+6 > 2 → pop (finish height 6)
+
+5 > 2 → pop (finish height 5)
+
+1 > 2 → ❌ stop (1 can still extend)
+
 
 LC907 (range contribution w/ next smaller)
+
+
 
 LC42 (trap w/ stack version)
 
 LC155 (quick cooldown)
+
+LC503 - Need to redo
+
+LC901 (span = previous greater) - need to redo
+
+LC84 - redo

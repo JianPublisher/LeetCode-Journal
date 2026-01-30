@@ -1,0 +1,39 @@
+Time complexity -> How number of basic operations grows as input size n grows
+Space complexity -> How extra memory grows as input size grows with n
+
+CheatSheet
+Time
+O(1) - constant time
+O(log n) - logarithmic (binary search, balanced tree lookup)
+O(n) - linear
+O(n log n) - typical for efficient sorts (merge sort, quicksort average)
+O(n ^ 2) - quadratic (double nested loops)
+O(2^n) - exponential
+O(n!) - factorial
+
+Space
+O(1) - few variables
+O(n) - building result list of size n
+O(log n) - recursion depth for binary search
+
+How to count operations
+1. Identify basic operations you care about
+2. Count how many times it executes as function of n
+
+Example 1 - Sum array
+int sum = 0;
+for (int i = 0; i < n; i++) { sum += array[i] }
+return sum
+-> Time O(n)
+-> Auxiliary space(extra) O(1) -> sum, i
+-> Input space is O(n)
+-> Output space is O(1) since its just an int
+So when asked this is O(N) time and O(1) auxiliary space
+
+
+Example 2 - Return new array
+int[] result = new int[n]
+for (int i = 0; i < n; i++) { result[i] = array[i] * 2 }
+Time: O(N)
+Auxiliary space:
+

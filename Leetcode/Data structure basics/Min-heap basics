@@ -1,0 +1,26 @@
+Min heap always let you take out the smallest item first
+
+Min heap is a priorityQueue
+- offer() -> push
+- peek()
+- poll() -> returns the smallest value
+
+We use heap when we want the best item so far (biggest/smallest) while things keep coming, or we need to merge sorted sources
+Example - Top K - keep 10 largest numbers seen so far
+		- Streaming - numbers arrive 1 by 1, always ask current smallest or largest
+		- Merge - merge k sorted lists / k sorted rows
+
+Min heap vs Max Heap
+- min gives smallest -> when to use? When I want give me the smallest
+- max gives largest -> when to use? keep only the smallest, kick out the largest, so offer would kick out the largest
+
+Comparator - we give a function
+-> if return negative -> a comes before b
+-> if positive -> a comes after b
+-> 0 -> equal
+we normally do (a, b) -> a[0] - b[0]
+but using Integer.compare(a, b) is safer
+
+ascending is Integer.compare(a, b)
+descending is Integer.compare(b, a)
+
