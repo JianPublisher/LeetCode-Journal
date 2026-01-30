@@ -4,6 +4,28 @@ Heap questions -> priorityQueue questions
 
 LC373 K Pairs With Smallest Sums
 
+-> create minHeap PriorityQueue<int[]> minHeap = new PriorityQueue<>((a, b) -> Integer.compare(nums1[a[0]] + nums2[[a[1]], nums1[b[0]] + nums2[b[1]]))
+-> and then I should first add all possible uh i, 0 -> for (int i = 0, i < Math.min(k, nums1.length); i++) -> this is because we only need k pairs
+so if k = 3 and nums1 = 1000, we dont do 1000 times, we need 3 rows only
+-> and then we push-> min.offer(new int[]{i, 0})
+
+and now while k > 0 and minheap isnt empty, we pop.
+pop result is def the smallest since its min heap
+we add that pop to result
+and then we do popvalue -> {popvalue[0]. popvalue[1] + 1} //just making sure we dont add out fo boudn stuff in, and its fine too because its nto empty anyway the minheap, itll pop others
+and then we push it back to minHeap
+
+then return result.
+
+So basically -> start with {i,0} for i < min(k, nums1.length)
+
+                pop smallest
+
+                add to result
+
+                push {i, j+1} if valid
+
+                repeat k times
 
 LC347 Top K Frequent Elements
 
